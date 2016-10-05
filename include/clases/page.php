@@ -27,7 +27,7 @@ class page extends html{
 				$this->createContentPage($section).
 			$this->cerrarBody();
 		
-		echo $pagina;
+		return $pagina;
 
 
 	}

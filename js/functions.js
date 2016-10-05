@@ -1,4 +1,4 @@
-var url="http://localhost/StyleNotas/";
+var url="http://localhost/NotasStyle/";
 function nuevoAjax(){
 	var xmlhttp=false;
  	try {

@@ -43,7 +43,7 @@ class MySQL extends config{
 		$sql = 'SELECT IdNotas FROM ad_Notas ORDER BY IdNotas DESC LIMIT 1';
 		$dato = $this->fetch_array($this->query($sql));
 
-		return $dato['IdNotas'] + 1;
+		return $dato['IdNotas'];
 	}
 	//Devuelve el Email del vendedor
 	public function getEmailSeller($idVendedor){
@@ -56,7 +56,7 @@ class MySQL extends config{
 		$sql = 'INSERT INTO ad_notas (Fecha, Status, IdUsuario) VALUES ("'.parent::fechaActual().'", 1, "'.$this->idV.'")';
 
 		//echo $sql;
-		//$this->query($sql);
+		$this->query($sql);
 
 	}
 	public function query($value){

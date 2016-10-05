@@ -11,7 +11,7 @@
  */
 class config{
 	public function __construct(){		
-		$this->url 			= "http://localhost/StyleNotas/";
+		$this->url 			= "http://localhost/NotasStyle/";
 		$this->MAIL_SERVER 	= "";
 		$this->MAIL_PORT 	= 465;
 		$this->MAIL_EMAIL 	= "";
