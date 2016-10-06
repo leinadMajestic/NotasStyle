@@ -9,6 +9,11 @@ if($func == "item"){
 	$pos = $_POST['pos'];
 	$campo = $_POST['campo'];
 	$save->saveItem($nota, $valor, $pos, $campo);
+	if($campo == "cliente"){
+		$dato = $save->getValueNota($nota);
+
+		echo $dato;
+	}
 }
 elseif($func == "comentarios"){
 	$save->saveComentarios($nota, $valor);

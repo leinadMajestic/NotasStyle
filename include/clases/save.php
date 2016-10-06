@@ -14,31 +14,7 @@ class save extends MySQL{
 			$sql = $campo == "concepto" ? $this->insertProduct($valor, $ncampo, $nota, $pos, 0) : ($campo == "proveedor" ? $this->insertSupplier($valor, $ncampo, $nota, $pos, 0) : $this->insertItem($valor, $ncampo, $nota, $pos));
 		else
 			$sql = 
-		$campo == "concepto" 
-			?  
-				($dat['IdProducto'] == 0 
-					? 
-						$this->insertProduct($valor, $ncampo, $nota, $pos, 1, $dat['IdItems']) 
-					: 
-						$this->updateProduct($valor, $dat['IdProducto'])
-				) 
-			: 
-				($campo == "proveedor" 
-					? 
-						($dat['IdProveedor'] == 0 
-							?
-								$this->insertSupplier($valor, $ncampo, $nota, $pos, 1, $dat['IdItems']) 
-							:
-								$this->updateSupplier($valor, $dat['IdProveedor'])
-						) 
-					: 
-						($campo == "cliente" 
-							? 
-								$this->updatePrices($valor, $dat['IdItems'], $nota) 
-							: 
-								$this->updateItem($valor, $dat['IdItems'], $ncampo)
-						)
-				);
+		$campo == "concepto" ? ($dat['IdProducto'] == 0 ? $this->insertProduct($valor, $ncampo, $nota, $pos, 1, $dat['IdItems']) : $this->updateProduct($valor, $dat['IdProducto'])) : ($campo == "proveedor" ? ($dat['IdProveedor'] == 0 ? $this->insertSupplier($valor, $ncampo, $nota, $pos, 1, $dat['IdItems']) : $this->updateSupplier($valor, $dat['IdProveedor'])) : ($campo == "cliente" ? $this->updatePrices($valor, $dat['IdItems'], $nota) : $this->updateItem($valor, $dat['IdItems'], $ncampo)));
 
 		parent::query($sql);
 		$this->updatePriceNote($nota);
@@ -46,6 +22,13 @@ class save extends MySQL{
 	public function saveCliente($nota, $valor){
 	}
 	public function saveComentarios($nota, $valor){
+	}
+	//Método que devuelve el precio total de la nota, el subtotal y el IVA
+	public function getValueNota($nota){
+		$suma = parent::fetch_array(parent::query('SELECT SUM(Total) AS total FROM ad_items WHERE IdNotas = "'.$nota.'"'));
+		$calculo = $this->calculaIVA($suma['total']);
+
+		return $calculo;
 	}
 	//Método para crear la nota, en caso de que no exista
 	private function createNote(){
@@ -93,7 +76,7 @@ class save extends MySQL{
 		return $sql;
 	}
 	//Método para insertar items de forma genérica
-	private function insertItem(){
+	private function insertItem($valor, $ncampo, $nota, $pos){
 		$sql = 'INSERT INTO ad_items (IdNotas, pos, '.$ncampo.') VALUES ("'.$nota.'", "'.$pos.'", "'.$valor.'")';
 
 		return $sql;
@@ -134,16 +117,16 @@ class save extends MySQL{
 	}
 	//Método usado para calcular desglosar el IVA, y el subtotal
 	private function calculaIVA($valor){
-		$subtotal = $valor / 1.16;
-		$IVA = $valor - $subtotal;
+		$subtotal = number_format($valor / 1.16, 2, ".", "");
+		$IVA = number_format($valor - $subtotal, 2, ".", "");
 
 		$array = array(
 			"iva" => $IVA,
 			"subtotal" => $subtotal,
+			"total" => $valor,
 		);
 
 		return $array;
-
 	}
 }
 ?>

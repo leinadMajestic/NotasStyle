@@ -22,19 +22,22 @@ function save(id){
 	var res = id.split("_");
 	var send = "&nota="+nota+"&valor="+valor+"&campo="+res[0]
 
-	send += res[1] != undefined ? "&pos="+res[1]+"&func=item" : (id == "comentarios" ? "&func=comentarios" : "&func=cliente")
+	send += res[1] != undefined ? "&pos="+res[1]+"&func=item" : (id == "comentarios" ? "&func=comentarios" : "&func=cliente");
 	ajax=nuevoAjax();
 	ajax.open("POST", url+"ajax/save.php",true);
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState<4) {
 		}
 		else{
+			console.log(ajax.responseText);
+			/*
 			if(ajax.responseText == 1){
 				
 			}
 			else{
 				
-			}
+			}*/
+
 		}
 	}
 	ajax.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
