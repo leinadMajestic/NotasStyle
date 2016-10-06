@@ -13,11 +13,10 @@ include "config.php";
 class MySQL extends config{
 	public function __construct($idVendedor){
 		parent::__construct();		
-		$this->idV = $idVendedor;
+		$this->idV = $idVendedor;		
 		$this->link = (mysql_connect(parent::getServer(), parent::getUser(), parent::getPassword())) or die(mysql_error());
 		mysql_select_db(parent::getDataBase(), $this->link) or die(mysql_error());
 	}
-	
 	//Devuelve el Nombre del Vendedor
 	public function getNameSeller($idVendedor){
 		$sql = 'SELECT Nombre, Apellidos FROM in_usuarios WHERE IdUsuarios = "'.$idVendedor.'"';
@@ -52,12 +51,24 @@ class MySQL extends config{
 
 		return $dato['Email'];
 	}
+	//Devuelve los estatus que existen en una cadena
+	public function getStatus(){
+		$sql = $this->query('SELECT * FROM in_estatus WHERE Estatus = 1');
+		$x=0;
+		while($dat = $this->fetch_array($sql)){
+			$separador = $x==0 ? "" : ";;";
+			$estatus .= $separador.$dat['IdEstatus']."::".$dat['Nombre'];
+			$x++;
+		}
+
+		return $estatus;
+
+	}
 	public function crearNota(){
 		$sql = 'INSERT INTO ad_notas (Fecha, Status, IdUsuario) VALUES ("'.parent::fechaActual().'", 1, "'.$this->idV.'")';
 
 		//echo $sql;
 		$this->query($sql);
-
 	}
 	public function query($value){
 		$this->total_query++;

@@ -12,14 +12,21 @@ if($func == "item"){
 	if($campo == "cliente"){
 		$dato = $save->getValueNota($nota);
 
-		echo $dato;
+		echo $dato['iva']."::".$dato['subtotal']."::".$dato['total'];
 	}
 }
 elseif($func == "comentarios"){
 	$save->saveComentarios($nota, $valor);
 }
 elseif($func == "cliente"){
-	$save->saveCliente($nota, $valor);
+	$campo = $_POST['campo'];
+	$save->saveCliente($nota, $valor, $campo);
+}
+elseif($func == "factura"){
+	$save->updateFactura($nota, $valor);
+}
+elseif($func == "estatus"){
+	$save->updateStatus($nota, $valor);
 }
 
 ?>

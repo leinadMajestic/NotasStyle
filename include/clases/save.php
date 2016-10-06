@@ -13,26 +13,53 @@ class save extends MySQL{
 		if($dat['IdItems'] == "")
 			$sql = $campo == "concepto" ? $this->insertProduct($valor, $ncampo, $nota, $pos, 0) : ($campo == "proveedor" ? $this->insertSupplier($valor, $ncampo, $nota, $pos, 0) : $this->insertItem($valor, $ncampo, $nota, $pos));
 		else
-			$sql = 
-		$campo == "concepto" ? ($dat['IdProducto'] == 0 ? $this->insertProduct($valor, $ncampo, $nota, $pos, 1, $dat['IdItems']) : $this->updateProduct($valor, $dat['IdProducto'])) : ($campo == "proveedor" ? ($dat['IdProveedor'] == 0 ? $this->insertSupplier($valor, $ncampo, $nota, $pos, 1, $dat['IdItems']) : $this->updateSupplier($valor, $dat['IdProveedor'])) : ($campo == "cliente" ? $this->updatePrices($valor, $dat['IdItems'], $nota) : $this->updateItem($valor, $dat['IdItems'], $ncampo)));
+			$sql = $campo == "concepto" ? ($dat['IdProducto'] == 0 ? $this->insertProduct($valor, $ncampo, $nota, $pos, 1, $dat['IdItems']) : $this->updateProduct($valor, $dat['IdProducto'])) : ($campo == "proveedor" ? ($dat['IdProveedor'] == 0 ? $this->insertSupplier($valor, $ncampo, $nota, $pos, 1, $dat['IdItems']) : $this->updateSupplier($valor, $dat['IdProveedor'])) : ($campo == "cliente" ? $this->updatePrices($valor, $dat['IdItems'], $nota) : $this->updateItem($valor, $dat['IdItems'], $ncampo)));
 
 		parent::query($sql);
 		$this->updatePriceNote($nota);
 	}
-	public function saveCliente($nota, $valor){
+	//Método para guardar la informacion del cliente
+	public function saveCliente($nota, $valor, $campo){
+		$ncampo = $this->selCampos($campo);
+
+		$sql = 'SELECT IdCliente FROM ad_notas WHERE IdNotas = "'.$nota.'"';
+		$dat = parent::fetch_array(parent::query($sql));
+		if($dat['IdCliente'] == 0){//Inserta cliente nuevo
+			parent::query('INSERT INTO in_clientes ('.$ncampo.') VALUES ("'.$valor.'")');
+			$lastID = parent::fetch_array(parent::query('SELECT IdCliente FROM in_clientes ORDER BY IdCliente DESC LIMIT 1'));
+			$sql = 'UPDATE ad_Notas SET IdCliente = "'.$lastID['IdCliente'].'" WHERE IdNotas = "'.$nota.'"';
+		}
+		else{//Actualizar datos de cliente
+			$sql = 'UPDATE in_clientes SET '.$ncampo.' = "'.$valor.'" WHERE IdCliente = "'.$dat['IdCliente'].'"';
+		}
+		parent::query($sql);
 	}
+	//Método para guardar los comentarios de la nota
 	public function saveComentarios($nota, $valor){
+		$sql = 'UPDATE ad_Notas SET Comentarios = "'.$valor.'" WHERE IdNotas = "'.$nota.'"';
+		$dat = parent::fetch_array(parent::query($sql));		
+	}
+	//Método para actualizar el campo factura, indica si lleva factura o no
+	public function updateFactura($nota, $valor){
+		$sql = 'UPDATE ad_Notas SET Factura = "'.$valor.'" WHERE IdNotas = "'.$nota.'"';
+
+		parent::query($sql);
+	}
+	//Método para actualizar el campo estatus, en base al seleccionado
+	public function updateStatus($nota, $valor){
+		$sql = 'UPDATE ad_Notas SET Status = "'.$valor.'" WHERE IdNotas = "'.$nota.'"';
+
+		parent::query($sql);
 	}
 	//Método que devuelve el precio total de la nota, el subtotal y el IVA
 	public function getValueNota($nota){
 		$suma = parent::fetch_array(parent::query('SELECT SUM(Total) AS total FROM ad_items WHERE IdNotas = "'.$nota.'"'));
 		$calculo = $this->calculaIVA($suma['total']);
+		$calculo['iva'] = number_format($calculo['iva'],2,".",",");
+		$calculo['subtotal'] = number_format($calculo['subtotal'],2,".",",");
+		$calculo['total'] = number_format($calculo['total'],2,".",",");
 
 		return $calculo;
-	}
-	//Método para crear la nota, en caso de que no exista
-	private function createNote(){
-		$sql = 'INSERT INTO ad_notas (Fecha, Status, IdUsuario) VALUES ("'.parent::fechaActual().'", 1, "'.$this->idV.'")';
 	}
 	//Método para obtener los campos tal cual se llaman en la base de datos
 	private function selCampos($tipo){
@@ -46,6 +73,10 @@ class save extends MySQL{
     		"luis" => "GastoL",
     		"cliente" => "Total",
     		"factura" => "Factura",
+    		"telefono" => "Telefono",
+    		"correo" => "Email", 
+    		"empresa" => "Empresa",
+    		"solicito" => "Contacto",
 		);
 
 		return $array[$tipo];

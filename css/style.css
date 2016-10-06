@@ -11,11 +11,9 @@ body{margin:0}
 html{font-size:62.5%;-webkit-tap-highlight-color:rgba(0,0,0,0)}
 body{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:14px;line-height:1.428571429;color:#333;background-color:#fff}
 
-
-
 input[type="checkbox"],input[type="radio"], input[type="text"]{padding:0;box-sizing:border-box}
 input[type="text"]{width:100%;border:#cccccc solid 1px;}
-textarea{overflow:auto;vertical-align:top;width:100%;resize: none;border:#cccccc solid 1px;}
+textarea, select{overflow:auto;vertical-align:top;width:100%;resize: none;border:#cccccc solid 1px;}
 *,*:before,*:after{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}
 
 input,button,select,textarea{font-family:inherit;font-size:inherit;line-height:inherit}
@@ -47,8 +45,31 @@ h6,.h6{font-size:12px}
 .col-xs-10{width:83.33333333333334%}
 .col-xs-11{width:91.66666666666666%}
 .col-xs-12{width:100%}
+/**estilos para el menu sidebar**/
+	.sidebar{
+		text-align: right;
+		border:#aaaaaa solid 1px;
+		padding: 10px
+	}
+	.sidebar div{border:#cccccc dashed 1px;padding: 4px 5px;cursor:pointer;margin-bottom:5px;}
+	.sidebar div:hover{border:#aaaaaa solid 1px; background:#eeeeee;}
+/**END estilos para el menu sidebar**/
 .contPrincipal{
 	width:95%;
 	max-width:1600px;
-	margin:auto;
+	margin:auto;	
+}
+#contenedorHeader{
+	padding:20px 0;
+	text-align: center;
+	border:#aaaaaa solid 1px;
+}
+.contenedor{
+	width:100%;
+	position:relative;
+	display:block;
+}
+.workArea{
+	border:#aaaaaa solid 1px;
+	padding: 10px
 }
