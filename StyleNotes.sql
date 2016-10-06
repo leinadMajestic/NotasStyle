@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Oct 06, 2016 at 01:09 AM
+-- Generation Time: Oct 07, 2016 at 12:55 AM
 -- Server version: 5.6.28
 -- PHP Version: 5.6.25
 
@@ -39,18 +39,8 @@ CREATE TABLE `ad_Items` (
   `PrecioLista` varchar(10) NOT NULL COMMENT 'Precio de lista del producto',
   `Cotizado` varchar(10) NOT NULL COMMENT 'Costo estimado del proveedor al entregar el producto',
   `GastoL` varchar(10) NOT NULL COMMENT 'Gasto que hace Luis',
-  `GastoM` varchar(10) NOT NULL COMMENT 'Gasto que hace Memo',
-  `Factura` varchar(1) NOT NULL COMMENT 'Indica si requirió factura 1=si, 0=no'
+  `GastoM` varchar(10) NOT NULL COMMENT 'Gasto que hace Memo'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `ad_Items`
---
-
-INSERT INTO `ad_Items` (`IdItems`, `IdNotas`, `IdProducto`, `IdProveedor`, `pos`, `Piezas`, `Subtotal`, `IVA`, `Total`, `PrecioLista`, `Cotizado`, `GastoL`, `GastoM`, `Factura`) VALUES
-(1, 1, 1, 1, 1, 12, '1000', '160', '1160', '100', '800', '600', '200', ''),
-(2, 1, 2, 2, 2, 10, '689.655172', '110.344827', '800', '50', '400', '0', '400', ''),
-(3, 1, 3, 3, 4, 5, '2155.17241', '344.827586', '2500', '200', '800', '0', '800', '');
 
 -- --------------------------------------------------------
 
@@ -68,15 +58,9 @@ CREATE TABLE `ad_Notas` (
   `Total` varchar(10) NOT NULL,
   `IdCliente` int(11) NOT NULL,
   `IdUsuario` int(11) NOT NULL,
-  `Comentarios` text NOT NULL
+  `Comentarios` text NOT NULL,
+  `Factura` int(1) NOT NULL COMMENT 'Indica si requirió factura 1=si, 0=no'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `ad_Notas`
---
-
-INSERT INTO `ad_Notas` (`IdNotas`, `Folio`, `Fecha`, `Status`, `Subtotal`, `IVA`, `Total`, `IdCliente`, `IdUsuario`, `Comentarios`) VALUES
-(1, 0, '2016-10-05 04:27:51', 1, '3844.82758', '615.172413', '4460', 0, 1, '');
 
 -- --------------------------------------------------------
 
@@ -98,6 +82,18 @@ CREATE TABLE `in_clientes` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `in_estatus`
+--
+
+CREATE TABLE `in_estatus` (
+  `IdEstatus` int(11) NOT NULL,
+  `Nombre` varchar(100) NOT NULL,
+  `Estatus` int(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `in_productos`
 --
 
@@ -106,15 +102,6 @@ CREATE TABLE `in_productos` (
   `Nombre` varchar(256) NOT NULL,
   `SKU` varchar(64) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `in_productos`
---
-
-INSERT INTO `in_productos` (`IdProducto`, `Nombre`, `SKU`) VALUES
-(1, 'Concepto de prueba para la nota 1', ''),
-(2, 'Segundo Concepto de prueba para la nota 1 ', ''),
-(3, 'Cuarto concepto de prueba para la nota 1', '');
 
 -- --------------------------------------------------------
 
@@ -132,15 +119,6 @@ CREATE TABLE `in_proveedores` (
   `Direccion` text NOT NULL,
   `Status` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `in_proveedores`
---
-
-INSERT INTO `in_proveedores` (`IdProveedor`, `Empresa`, `Telefono`, `Email`, `Contacto`, `Puesto`, `Direccion`, `Status`) VALUES
-(1, 'Daniel Huerta Gamez', '', '', '', '', '', 0),
-(2, 'Victor Cadena', '', '', '', '', '', 0),
-(3, 'Veronica Gamez', '', '', '', '', '', 0);
 
 -- --------------------------------------------------------
 
@@ -189,6 +167,12 @@ ALTER TABLE `in_clientes`
   ADD PRIMARY KEY (`IdCliente`);
 
 --
+-- Indexes for table `in_estatus`
+--
+ALTER TABLE `in_estatus`
+  ADD PRIMARY KEY (`IdEstatus`);
+
+--
 -- Indexes for table `in_productos`
 --
 ALTER TABLE `in_productos`
@@ -214,27 +198,32 @@ ALTER TABLE `in_usuarios`
 -- AUTO_INCREMENT for table `ad_Items`
 --
 ALTER TABLE `ad_Items`
-  MODIFY `IdItems` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `IdItems` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `ad_Notas`
 --
 ALTER TABLE `ad_Notas`
-  MODIFY `IdNotas` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `IdNotas` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `in_clientes`
 --
 ALTER TABLE `in_clientes`
   MODIFY `IdCliente` int(11) NOT NULL AUTO_INCREMENT;
 --
+-- AUTO_INCREMENT for table `in_estatus`
+--
+ALTER TABLE `in_estatus`
+  MODIFY `IdEstatus` int(11) NOT NULL AUTO_INCREMENT;
+--
 -- AUTO_INCREMENT for table `in_productos`
 --
 ALTER TABLE `in_productos`
-  MODIFY `IdProducto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `IdProducto` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `in_proveedores`
 --
 ALTER TABLE `in_proveedores`
-  MODIFY `IdProveedor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `IdProveedor` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `in_usuarios`
 --
