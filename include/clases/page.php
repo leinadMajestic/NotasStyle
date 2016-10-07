@@ -16,6 +16,9 @@ class page extends html{
 	}
 	//Método para crear el contenido de la pagina, es el método al que se puede accesar desde el front
 	public function createPage($section=""){
+		if($section == "addNote")
+			parent::crearNota();
+
 		$pagina = 
 			$this->hookHeader($section).
 			$this->hookBody().
@@ -56,7 +59,7 @@ class page extends html{
 		}
 		//Método para las metas generales
 		private function metasGenerales($section){
-			$title = $section == "addNota" ? "Agregar Nueva Nota Style" : ($section == "login" ? "Login StylePublicidad" : ($section == "home" ? "Sistemas de Notas Style" : ""));
+			$title = $section == "addNote" ? "Agregar Nueva Nota Style" : ($section == "login" ? "Login StylePublicidad" : ($section == "home" ? "Sistemas de Notas Style" : ""));
 			$variable = '
 			<title>'.$title.'</title>
 			
@@ -121,7 +124,7 @@ class page extends html{
 		return $var;
 	}
 	private function contentWorkArea($section){
-		if($section == "addNota"){
+		if($section == "addNote"){
 			$var = 
 				parent::showLogo().
 				parent::createSpaceInfoCos().
@@ -132,6 +135,22 @@ class page extends html{
 		}
 		elseif($section == "home"){
 			$var = '';
+		}
+		elseif($section == "activeNotes"){
+			$var = 
+			parent::showListNotes($section);
+		}
+		elseif($section == "deliveredNotes"){
+			$var = 
+			parent::showListNotes($section);
+		}
+		elseif($section == "paidNotes"){
+			$var = 
+			parent::showListNotes($section);
+		}
+		elseif($section == "cutNotes"){
+			$var = 
+			parent::showListNotes($section);
 		}
 
 		return $var;

@@ -52,7 +52,7 @@ h6,.h6{font-size:12px}
 		padding: 10px
 	}
 	.sidebar div{border:#cccccc dashed 1px;padding: 4px 5px;cursor:pointer;margin-bottom:5px;}
-	.sidebar div:hover{border:#aaaaaa solid 1px; background:#eeeeee;}
+	.sidebar div:hover, .sidebar div.active{border:#aaaaaa solid 1px; background:#eeeeee;}
 /**END estilos para el menu sidebar**/
 .contPrincipal{
 	width:95%;
@@ -73,3 +73,6 @@ h6,.h6{font-size:12px}
 	border:#aaaaaa solid 1px;
 	padding: 10px
 }
+.tableTitleBorder div, .tableBorder div{border:#eeeeee solid 1px; text-align:center;padding:3px 0;}
+.tableBorder div{padding:0;background-color:#ffffff}
+.tableBorder.gray div{background: #eeeeee}

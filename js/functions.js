@@ -91,6 +91,21 @@ function number_format(number, decimals, dec_point, thousands_sep) {
 }
 /**END FUNCION PARA MOSTRAR EL VALOR CON FORMATO NUMERICO**/
 
+/**FUNCION QUE DEVUELVE EL LINK DE LAS OPCIONES DEL MENÚ**/
+function getLinks(id){
+	var links = new Array();
+	links['addNota'] 	= "crear-notas.html";
+	links['buscar'] 	= "buscar-notas.html";
+	links['vActivas'] 	= "ver-notas-activas.html";
+	links['vEntregadas']= "ver-notas-entregadas.html";
+	links['vPagadas'] 	= "ver-notas-pagadas.html";
+	links['corte'] 		= "ver-notas-al-corte.html";
+	links['cerrarSesion']= "cerrar-sesion.html";
+
+	return links[id];
+
+}
+/**END FUNCION QUE DEVUELVE EL LINK DE LAS OPCIONES DEL MENÚ**/
 $(document).ready(function(){
     $(".radiobutton").click(function(){
         var valor = $(this).val();
@@ -101,5 +116,9 @@ $(document).ready(function(){
     	var valor = $("#estatus").val();
     	var nota = $("#nota").val();
     	saveEstatus(valor, nota);
+    });
+    $(".submenu").click(function(){
+    	var link = getLinks($(this).attr("id"));
+    	$(location).attr('href',url+link);
     });
 });

@@ -13,12 +13,12 @@ include "page.php";
  class sesion extends page{
  	public function __construct(){
  		session_start();
- 		parent::__construct();
+ 		parent::__construct($_SESSION['Idusuario']);
  	}
  	public function validar($section){
  		if($section == "login" && $_SESSION['autorizado'] == "SI")
  			$this->sesionAbierta();
- 		elseif($_SESSION['autorizado'] != "SI" && $section != "login")
+ 		elseif(($_SESSION['autorizado'] != "SI" && $section != "login") || ($section == "cerrarSesion"))
  			$this->cerrarSesion();
  	}
  	public function cerrarSesion(){

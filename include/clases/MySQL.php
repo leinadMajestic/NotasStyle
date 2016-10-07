@@ -65,10 +65,13 @@ class MySQL extends config{
 
 	}
 	public function crearNota(){
-		$sql = 'INSERT INTO ad_notas (Fecha, Status, IdUsuario) VALUES ("'.parent::fechaActual().'", 1, "'.$this->idV.'")';
-
-		//echo $sql;
-		$this->query($sql);
+		$lastID = $this->getLastId("ad_Notas", "IdNotas");
+		$cmp = $this->fetch_array($this->query('SELECT Status FROM ad_Notas WHERE IdNotas = "'.$lastID.'"'));
+		if($cmp['Status'] != 0){
+			$sql = 'INSERT INTO ad_Notas (Fecha, Status, IdUsuario) VALUES ("'.parent::fechaActual().'", 0, "'.$this->idV.'")';	
+			$this->query($sql);
+		}
+		
 	}
 	public function query($value){
 		$this->total_query++;
@@ -90,6 +93,11 @@ class MySQL extends config{
 	}
 	public function fetch_assoc($value){
 		return mysql_fetch_assoc($value);
+	}
+	public function getLastId($table, $id){
+		$sel = 'SELECT '.$id.' FROM '.$table.' ORDER BY '.$id.' DESC LIMIT 1';
+		$dato = $this->fetch_array($this->query($sel));
+		return $dato[$id];
 	}
 }
 ?>

@@ -191,7 +191,7 @@ class html extends MySQL{
 	}
 	//Devuelve un select generico
 	private function createSelectEstatus(){
-		$select = '<select id="estatus">';
+		$select = '<select id="estatus"><option value="">-- Seleccione</option>';
 		$estatus = parent::getStatus();
 		$option = explode(";;",$estatus);
 		foreach($option AS $data){
@@ -228,24 +228,61 @@ class html extends MySQL{
 	}
 	//Método para crear el menú, sidebar
 	public function showMenu($section){
-
 		$var = '
 		<div class="col-xs-2 sidebar">
-			<div class="submenu" id="addNota">Crear nota</div>
-			<div class="submenu" id="buscar">Buscar nota</div>
-			<div class="submenu" id="vActivas">Ver Activas</div>
-			<div class="submenu" id="vEntregadas">Ver Entregadas</div>
-			<div class="submenu" id="vPagadas">Ver Pagadas</div>
-			<div class="submenu" id="corte">Hacer corte</div>
+			<div class="'; if($section == "addNote") $var .='active'; $var .=' submenu" id="addNota">Crear nota</div>
+			<!--<div class="'; if($section == "searchNote") $var .='active'; $var .=' submenu" id="buscar">Buscar nota</div>-->
+			<div class="'; if($section == "activeNotes") $var .='active'; $var .=' submenu" id="vActivas">Ver Activas</div>
+			<div class="'; if($section == "deliveredNotes") $var .='active'; $var .=' submenu" id="vEntregadas">Ver Entregadas</div>
+			<div class="'; if($section == "paidNotes") $var .='active'; $var .=' submenu" id="vPagadas">Ver Pagadas</div>
+			<div class="'; if($section == "cutNotes") $var .='active'; $var .=' submenu" id="corte">Hacer corte</div>
+			<div class="submenu" id="cerrarSesion">Cerrar Sesión</div>
 		</div>';
 
 		return $var;
 	}
+	//Método para crear un header en la página
 	public function showHeader(){
 		$var = '
 		<div class="con-xs-12" id="contenedorHeader">
-			Aqui va el header
 		</div>';
+
+		return $var;
+	}
+	//Método que devuelve una lista de notas, en base a un status
+	public function showListNotes($section){
+		$status = parent::fetch_array(parent::query('SELECT IdEstatus, Nombre FROM in_estatus WHERE Section = "'.$section.'"'));
+		$sql = '
+		SELECT ad_Notas.IdNotas, ad_Notas.Fecha, ad_Notas.Total, in_clientes.Empresa, CONCAT(in_usuarios.Nombre," ",in_usuarios.Apellidos) AS Vendedor
+		FROM ad_Notas 
+		INNER JOIN in_usuarios ON in_usuarios.IdUsuarios = ad_Notas.IdUsuario
+		LEFT JOIN in_clientes ON in_clientes.IdCliente = ad_Notas.IdCliente
+		WHERE ad_Notas.Status = "'.$status['IdEstatus'].'"';
+		$var = $this->createTitleTable();
+
+		$dat = parent::query($sql);
+		while($dato = parent::fetch_array($dat)){
+			$color = $x == 0 ? "gray" : "";
+			$var .= $this->createLineTable($color, $dato['IdNotas'], $dato['Fecha'], $dato['Total'], $dato['Empresa'], $dato['Vendedor'], $status['Nombre']);
+			$x = $x == 0 ? 1 : 0;
+		}
+
+		return $var;
+	}
+	//Método para crear una línea del título de la lista para hacerlo recursivo
+	private function createTitleTable(){
+		$var = '<div class="tableTitleBorder"><div class="col-xs-1">ID</div><div class="col-xs-2">Fecha</div><div class="col-xs-1">Precio Total</div><div class="col-xs-3">Empresa</div><div class="col-xs-3">Vendedor</div><div class="col-xs-1">Estatus</div><div class="col-xs-1">Ver</div></div>';
+
+		return $var;
+	}
+	//Método para crear una línea recursiva que contiene la información necesaria para hacerse recursivo
+	private function createLineTable($color, $id, $fecha, $precio, $empresa, $vendedor, $status){
+		$fecha = $fecha == "" ? "&nbsp;" : $fecha;
+		$precio = $precio == "" ? "&nbsp;" : $precio;
+		$empresa = $empresa == "" ? "&nbsp;" : $empresa;
+		$vendedor = $vendedor == "" ? "&nbsp;" : $vendedor;
+
+		$var = '<div class="tableBorder '.$color.'"><div class="col-xs-1">'.$id.'</div><div class="col-xs-2">'.$fecha.'</div><div class="col-xs-1">'.$precio.'</div><div class="col-xs-3">'.$empresa.'</div><div class="col-xs-3">'.$vendedor.'</div><div class="col-xs-1">'.$status.'</div><div class="col-xs-1">ver</div></div>';
 
 		return $var;
 	}

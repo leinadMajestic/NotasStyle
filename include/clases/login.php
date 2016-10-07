@@ -30,7 +30,7 @@ class login extends MySQL{
 		}
 	}
 	private function firmar($idVendedor){
-		
+		$_SESSION['Idusuario'] = $idVendedor;
 		$_SESSION['Usuario']= $this->usuario;
 		$_SESSION['nivel'] 	= parent::getLevelSeller($idVendedor);
 		$_SESSION['autorizado'] = "SI";
